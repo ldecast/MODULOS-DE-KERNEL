@@ -10,7 +10,7 @@
 #include <linux/version.h>
 
 MODULE_LICENSE("GPL");
-MODULE_AUTHOR("Juan Pablo Rojas Chinchilla");
+MODULE_AUTHOR("Grupo 14");
 MODULE_DESCRIPTION("modulo de RAM");
 
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(5,6,0)
@@ -53,16 +53,16 @@ static const struct file_operations operations = {
 #endif
 
 static int start(void){
-    proc_create("memo_201900289",0,NULL,&operations);
+    proc_create("memo_g14",0,NULL,&operations);
     printk(KERN_INFO "Cargando modulo de RAM\n");
-    printk(KERN_INFO "Carnet: 201900289\n");
+    printk(KERN_INFO "El grupo 14 ha instalado el monitor de memoria\n");
     return 0;
 }
 
 static void __exit finish(void){
-    remove_proc_entry("memo_201900289",NULL);
-    printk(KERN_INFO "Removiendo modulo de RAM\n");
-    printk(KERN_INFO "LABORATORIO SISTEMAS OPERATIVOS 1\n");
+    remove_proc_entry("memo_g14",NULL);
+    printk(KERN_INFO "El grupo 14 ha removido el monitor de memoria\n");
+    printk(KERN_INFO "LABORATORIO SISTEMAS OPERATIVOS 2\n");
 }
 
 module_init(start);

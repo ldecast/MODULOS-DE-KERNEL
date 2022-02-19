@@ -10,7 +10,7 @@
 #include <linux/fs.h>
 
 MODULE_LICENSE("GPL");
-MODULE_AUTHOR("Juan Pablo Rojas Chinchilla");
+MODULE_AUTHOR("Grupo 14");
 MODULE_DESCRIPTION("modulo de cpu");
 
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 6, 0)
@@ -139,17 +139,17 @@ static const struct file_operations operations = {
 
 static int start(void)
 {
-    proc_create("cpu_201900289", 0, NULL, &operations);
-    printk(KERN_INFO "Cargando modulo de cpu\n");
-    printk(KERN_INFO "Nombre: Juan Pablo Rojas Chinchilla\n");
+    proc_create("cpu_g14", 0, NULL, &operations);
+    printk(KERN_INFO "Cargando modulo de CPU\n");
+    printk(KERN_INFO "El grupo 14 ha instalado el monitor de CPU\n");
     return 0;
 }
 
 static void __exit finish(void)
 {
-    remove_proc_entry("cpu_201900289", NULL);
-    printk(KERN_INFO "Removiendo modulo cpu\n");
-    printk(KERN_INFO "Diciembre 2021\n");
+    remove_proc_entry("cpu_g14", NULL);
+    printk(KERN_INFO "El grupo 14 ha removido el monitor de CPU\n");
+    printk(KERN_INFO "Primer semestre 2022\n");
 }
 
 module_init(start);
