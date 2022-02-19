@@ -1,0 +1,1 @@
+cmd_/home/juanpa/Documents/sopes/SO2_Practica1_G14/c/ram/memory_g14.mod := { echo  /home/juanpa/Documents/sopes/SO2_Practica1_G14/c/ram/memory_g14.o;  echo; } > /home/juanpa/Documents/sopes/SO2_Practica1_G14/c/ram/memory_g14.mod

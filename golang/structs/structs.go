@@ -37,7 +37,7 @@ type ProcessSend struct {
 	Pid   int      `json: "pid"`
 	Name  string   `json: "name"`
 	User  string   `json: "user"`
-	State int      `json: "state"`
+	State string   `json: "state"`
 	Ram   int      `json: "ram"`
 	Child []Childs `json: "child"`
 }

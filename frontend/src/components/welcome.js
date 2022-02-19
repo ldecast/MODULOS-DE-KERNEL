@@ -5,16 +5,20 @@ export class Welcome extends React.Component {
         return (
             <div>
                 <p>
-                    Nombre: Juan Pablo Rojas Chinchilla
+                    Grupo: 14
                 </p>
                 <p>
-                    Carnet: 201900289
+                    Carnets: 
+                    201900289 -
+                    201906564 -
+                    201902238 -
+                    201021212
                 </p>
                 <p>
-                    Laboratorio: Sistemas Operativos 1
+                    Laboratorio: Sistemas Operativos 2
                 </p>
                 <p>
-                    Semestre: Vacaciones Diciembre 2021
+                    Semestre: Primer semestre 2022
                 </p>
             </div>
         )

@@ -181,6 +181,7 @@ func getCPU() structs.CpuSend {
 	json.Unmarshal(processes, &cpu)
 	cpu.Usage = getCpuUsage()
 	hashmap := make(map[int]string)
+	hashmap2 := make(map[int]string)
 	var keys []int
 	for i := 0; i < len(cpu.Processes); i++ {
 		inputProcess := cpu.Processes[i]
@@ -188,7 +189,11 @@ func getCPU() structs.CpuSend {
 			keys = append(keys, inputProcess.User)
 			hashmap[inputProcess.User] = getUser(inputProcess.User)
 		}
-		auxiliar := structs.ProcessSend{Pid: inputProcess.Pid, Name: inputProcess.Name, User: hashmap[inputProcess.User], State: inputProcess.State, Ram: inputProcess.Ram, Child: inputProcess.Child}
+		if !contains(keys, inputProcess.State) {
+			keys = append(keys, inputProcess.State)
+			hashmap2[inputProcess.State] = getState(inputProcess.State)
+		}
+		auxiliar := structs.ProcessSend{Pid: inputProcess.Pid, Name: inputProcess.Name, User: hashmap[inputProcess.User], State: hashmap2[inputProcess.State], Ram: inputProcess.Ram, Child: inputProcess.Child}
 		cpuSend.Processes = append(cpuSend.Processes, auxiliar)
 	}
 	cpuSend.Running = cpu.Running
@@ -208,6 +213,18 @@ func getUser(nombre int) string {
 	}
 	salida := strings.Trim(strings.Trim(string(stdout), " "), "\n")
 	return salida
+}
+
+func getState(nombre int) string {
+	if nombre == 0 {
+		return "ejecucion"
+	} else if nombre == 1 {
+		return "dormido"
+	} else if nombre == 4 {
+		return "zombie"
+	} else {
+		return "detenido"
+	}
 }
 
 func killProcess(response http.ResponseWriter, request *http.Request) {
