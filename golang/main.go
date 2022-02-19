@@ -164,7 +164,7 @@ func getCache() float64 {
 }
 
 func getMemory() structs.Memoria {
-	ram, _ := ioutil.ReadFile("/proc/memo_201900289")
+	ram, _ := ioutil.ReadFile("/proc/memo_g14")
 	var memoria structs.Memoria
 	json.Unmarshal(ram, &memoria)
 	memoria.Cache_memory = getCache()
@@ -175,7 +175,7 @@ func getMemory() structs.Memoria {
 }
 
 func getCPU() structs.CpuSend {
-	processes, _ := ioutil.ReadFile("/proc/cpu_201900289")
+	processes, _ := ioutil.ReadFile("/proc/cpu_g14")
 	var cpu structs.Cpu
 	var cpuSend structs.CpuSend
 	json.Unmarshal(processes, &cpu)
