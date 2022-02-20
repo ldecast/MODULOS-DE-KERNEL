@@ -1,1 +1,0 @@
-cmd_/home/juanpa/Documents/sopes/SO2_Practica1_G14/c/ram/Module.symvers := sed 's/\.ko$$/\.o/' /home/juanpa/Documents/sopes/SO2_Practica1_G14/c/ram/modules.order | scripts/mod/modpost  -a  -o /home/juanpa/Documents/sopes/SO2_Practica1_G14/c/ram/Module.symvers -e -i Module.symvers  -N -T -

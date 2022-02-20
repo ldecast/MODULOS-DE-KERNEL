@@ -1,1 +1,0 @@
-cmd_/home/juanpa/Documents/sopes/SO2_Practica1_G14/c/ram/memory_g14.ko := ld -r -m elf_x86_64 --build-id=sha1  -T scripts/module.lds -o /home/juanpa/Documents/sopes/SO2_Practica1_G14/c/ram/memory_g14.ko /home/juanpa/Documents/sopes/SO2_Practica1_G14/c/ram/memory_g14.o /home/juanpa/Documents/sopes/SO2_Practica1_G14/c/ram/memory_g14.mod.o;  true

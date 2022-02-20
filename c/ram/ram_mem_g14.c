@@ -53,14 +53,14 @@ static const struct file_operations operations = {
 #endif
 
 static int start(void){
-    proc_create("memo_g14",0,NULL,&operations);
+    proc_create("ram_mem_g14",0,NULL,&operations);
     printk(KERN_INFO "Cargando modulo de RAM\n");
     printk(KERN_INFO "El grupo 14 ha instalado el monitor de memoria\n");
     return 0;
 }
 
 static void __exit finish(void){
-    remove_proc_entry("memo_g14",NULL);
+    remove_proc_entry("ram_mem_g14",NULL);
     printk(KERN_INFO "El grupo 14 ha removido el monitor de memoria\n");
     printk(KERN_INFO "LABORATORIO SISTEMAS OPERATIVOS 2\n");
 }
