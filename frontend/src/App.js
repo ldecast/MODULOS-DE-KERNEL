@@ -5,6 +5,7 @@ import { Cpu } from './components/cpu';
 import { Memory } from './components/memory';
 import { Navbar } from './components/navbar';
 import { Arbol } from './components/arbol';
+import {Strace } from './components/strace';
 import history from './history/history';
 import './App.css';
 
@@ -19,6 +20,7 @@ function App() {
           <Route exact path="/cpu" element={<Cpu />} />
           <Route exact path="/memory" element={<Memory />} />
           <Route exact path="/tree" element ={<Arbol/>}/>
+          <Route exact path="/strace/:pid" element ={<Strace/>}/>
         </Routes>
       </Router>
     </div>

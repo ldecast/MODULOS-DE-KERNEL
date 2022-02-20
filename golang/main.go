@@ -24,65 +24,65 @@ var upgrader = websocket.Upgrader{
 	WriteBufferSize: 1024,
 }
 
-func main() {
-	makeServer()
-}
-
 // func main() {
-// 	var err error
-// 	var wstat syscall.WaitStatus
-// 	var regs syscall.PtraceRegs
-// 	var ss structs.SyscallCounter
-// 	ss = ss.Init()
-
-// 	var pid = 7682
-// 	exit := true
-
-// 	erx := syscall.PtraceAttach(pid)
-// 	if err != nil {
-// 		fmt.Print("Attach")
-// 		fmt.Print(erx)
-// 	}
-
-// 	_, err = syscall.Wait4(pid, &wstat, 0, nil)
-// 	if err != nil {
-// 		fmt.Printf("wait %d err %s\n", pid, err)
-// 		fmt.Println(err)
-// 	}
-
-// 	err = syscall.PtraceSetOptions(pid, syscall.PTRACE_O_TRACESYSGOOD)
-// 	if err != nil {
-// 		fmt.Println("Ptrace set options")
-// 		panic(err)
-// 	}
-
-// 	for {
-// 		if exit {
-// 			err = syscall.PtraceGetRegs(pid, &regs)
-// 			if err != nil {
-// 				break
-// 			}
-// 			// name := ss.GetName(regs.Orig_rax)
-// 			// fmt.Printf("name: %s, id: %d \n", name, regs.Orig_rax)
-// 			ss.Inc(regs.Orig_rax)
-// 		}
-
-// 		err = syscall.PtraceSyscall(pid, 0)
-// 		if err != nil {
-// 			panic(err)
-// 		}
-
-// 		_, err = syscall.Wait4(pid, nil, 0, nil)
-// 		if err != nil {
-// 			panic(err)
-// 		}
-
-// 		exit = !exit
-// 		ss.Print()
-// 		fmt.Println("---------------------------------------------")
-// 	}
-
+// 	makeServer()
 // }
+
+func main() {
+	var err error
+	var wstat syscall.WaitStatus
+	var regs syscall.PtraceRegs
+	var ss structs.SyscallCounter
+	ss = ss.Init()
+
+	var pid = 7335
+	exit := true
+
+	erx := syscall.PtraceAttach(pid)
+	if err != nil {
+		fmt.Print("Attach")
+		fmt.Print(erx)
+	}
+
+	_, err = syscall.Wait4(pid, &wstat, 0, nil)
+	if err != nil {
+		fmt.Printf("wait %d err %s\n", pid, err)
+		fmt.Println(err)
+	}
+
+	err = syscall.PtraceSetOptions(pid, syscall.PTRACE_O_TRACESYSGOOD)
+	if err != nil {
+		fmt.Println("Ptrace set options")
+		panic(err)
+	}
+
+	for {
+		if exit {
+			err = syscall.PtraceGetRegs(pid, &regs)
+			if err != nil {
+				break
+			}
+			name := ss.GetName(regs.Orig_rax)
+			fmt.Printf("name: %s, id: %d \n", name, regs.Orig_rax)
+			ss.Inc(regs.Orig_rax)
+		}
+
+		err = syscall.PtraceSyscall(pid, 0)
+		if err != nil {
+			panic(err)
+		}
+
+		_, err = syscall.Wait4(pid, nil, 0, nil)
+		if err != nil {
+			panic(err)
+		}
+
+		exit = !exit
+		ss.Print()
+		fmt.Println("---------------------------------------------")
+	}
+
+}
 
 func makeServer() {
 	router := mux.NewRouter().StrictSlash(true)
