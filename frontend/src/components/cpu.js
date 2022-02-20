@@ -98,6 +98,7 @@ export class Cpu extends React.Component {
                         <th scope='col'>State</th>
                         <th scope='col'>RAM</th>
                         <th scope='col'>Kill</th>
+                        <th scope='col'>Strace</th>
                     </tr>
                 </thead>
                 <tbody style={{ textAlign: 'center' }}>
@@ -110,6 +111,7 @@ export class Cpu extends React.Component {
                                 <td>{element.State}</td>
                                 <td>{element.Ram}</td>
                                 <td><button className='btn btn-danger' onClick={()=>this.killProcess(element.Pid)}>KILL</button></td>
+                                <td><button className='btn btn-danger'>Strace</button></td>
                             </tr>
                     )}
                 </tbody>
