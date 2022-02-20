@@ -96,7 +96,7 @@ func makeServer() {
 	router.HandleFunc("/", welcome).Methods("GET")
 	router.HandleFunc("/ram", socketMemory)
 	router.HandleFunc("/cpu", socketCpu)
-	router.HandleFunc("/strace", socketStrace)
+	router.HandleFunc("/strace/{pid}", socketStrace)
 	router.HandleFunc("/kill", killProcess).Methods("POST")
 	router.HandleFunc("/loadCpu", loadCpu).Methods("GET")
 	fmt.Println("server up in " + port + " port")
@@ -169,14 +169,13 @@ func writerCpu(connection *websocket.Conn) {
 	}
 }
 
-func writerStrace(connection *websocket.Conn) {
+func writerStrace(connection *websocket.Conn, pid int) {
 	var err error
 	var wstat syscall.WaitStatus
 	var regs syscall.PtraceRegs
 	var ss structs.SyscallCounter
 	ss = ss.Init()
 
-	var pid = 7682
 	exit := true
 
 	erx := syscall.PtraceAttach(pid)
@@ -254,13 +253,15 @@ func socketCpu(response http.ResponseWriter, request *http.Request) {
 }
 
 func socketStrace(response http.ResponseWriter, request *http.Request) {
+	vars := mux.Vars(request)
+	pid, _ := strconv.Atoi(vars["pid"])
 	upgrader.CheckOrigin = func(request *http.Request) bool { return true }
 	ws, err := upgrader.Upgrade(response, request, nil)
 	if err != nil {
 		log.Println(err)
 	}
 	log.Println("Client connected to Strace")
-	writerStrace(ws)
+	writerStrace(ws, pid)
 	log.Println("Client disconnected to Strace")
 }
 
@@ -292,7 +293,7 @@ func getCache() float64 {
 }
 
 func getMemory() structs.Memoria {
-	ram, _ := ioutil.ReadFile("/proc/memo_g14")
+	ram, _ := ioutil.ReadFile("/proc/ram_mem_g14")
 	var memoria structs.Memoria
 	json.Unmarshal(ram, &memoria)
 	memoria.Cache_memory = getCache()
@@ -371,7 +372,6 @@ func killProcess(response http.ResponseWriter, request *http.Request) {
 	salida := strings.Trim(strings.Trim(string(stdout), " "), "\n")
 	fmt.Println(salida)
 	response.Write([]byte("{\"value\": true"))
-
 }
 
 func contains(s []int, e int) bool {
