@@ -56,3 +56,14 @@ type CpuSend struct {
 	Total     int           `json: "total"`
 	Usage     float64       `json: "usage"`
 }
+
+type StraceSend struct {
+	Name string
+	Pid  int
+	List []Strace
+}
+
+type Strace struct {
+	Recurrence int
+	Name       string
+}

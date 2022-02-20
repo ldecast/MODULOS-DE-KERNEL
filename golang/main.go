@@ -11,6 +11,7 @@ import (
 	"os/exec"
 	"strconv"
 	"strings"
+	"syscall"
 	"time"
 
 	"github.com/gorilla/handlers"
@@ -24,11 +25,64 @@ var upgrader = websocket.Upgrader{
 }
 
 func main() {
-	// fmt.Println(getCPU())
-	// fmt.Println(getMemory())
-	// fmt.Println(getCpuUsage())
 	makeServer()
 }
+
+// func main() {
+// 	var err error
+// 	var wstat syscall.WaitStatus
+// 	var regs syscall.PtraceRegs
+// 	var ss structs.SyscallCounter
+// 	ss = ss.Init()
+
+// 	var pid = 7682
+// 	exit := true
+
+// 	erx := syscall.PtraceAttach(pid)
+// 	if err != nil {
+// 		fmt.Print("Attach")
+// 		fmt.Print(erx)
+// 	}
+
+// 	_, err = syscall.Wait4(pid, &wstat, 0, nil)
+// 	if err != nil {
+// 		fmt.Printf("wait %d err %s\n", pid, err)
+// 		fmt.Println(err)
+// 	}
+
+// 	err = syscall.PtraceSetOptions(pid, syscall.PTRACE_O_TRACESYSGOOD)
+// 	if err != nil {
+// 		fmt.Println("Ptrace set options")
+// 		panic(err)
+// 	}
+
+// 	for {
+// 		if exit {
+// 			err = syscall.PtraceGetRegs(pid, &regs)
+// 			if err != nil {
+// 				break
+// 			}
+// 			// name := ss.GetName(regs.Orig_rax)
+// 			// fmt.Printf("name: %s, id: %d \n", name, regs.Orig_rax)
+// 			ss.Inc(regs.Orig_rax)
+// 		}
+
+// 		err = syscall.PtraceSyscall(pid, 0)
+// 		if err != nil {
+// 			panic(err)
+// 		}
+
+// 		_, err = syscall.Wait4(pid, nil, 0, nil)
+// 		if err != nil {
+// 			panic(err)
+// 		}
+
+// 		exit = !exit
+// 		ss.Print()
+// 		fmt.Println("---------------------------------------------")
+// 	}
+
+// }
 
 func makeServer() {
 	router := mux.NewRouter().StrictSlash(true)
@@ -42,6 +96,7 @@ func makeServer() {
 	router.HandleFunc("/", welcome).Methods("GET")
 	router.HandleFunc("/ram", socketMemory)
 	router.HandleFunc("/cpu", socketCpu)
+	router.HandleFunc("/strace", socketStrace)
 	router.HandleFunc("/kill", killProcess).Methods("POST")
 	router.HandleFunc("/loadCpu", loadCpu).Methods("GET")
 	fmt.Println("server up in " + port + " port")
@@ -114,6 +169,68 @@ func writerCpu(connection *websocket.Conn) {
 	}
 }
 
+func writerStrace(connection *websocket.Conn) {
+	var err error
+	var wstat syscall.WaitStatus
+	var regs syscall.PtraceRegs
+	var ss structs.SyscallCounter
+	ss = ss.Init()
+
+	var pid = 7682
+	exit := true
+
+	erx := syscall.PtraceAttach(pid)
+	if err != nil {
+		fmt.Print("Attach")
+		fmt.Print(erx)
+	}
+
+	_, err = syscall.Wait4(pid, &wstat, 0, nil)
+	if err != nil {
+		fmt.Printf("wait %d err %s\n", pid, err)
+		fmt.Println(err)
+	}
+
+	err = syscall.PtraceSetOptions(pid, syscall.PTRACE_O_TRACESYSGOOD)
+	if err != nil {
+		fmt.Println("Ptrace set options")
+		panic(err)
+	}
+
+	for {
+		if exit {
+			err = syscall.PtraceGetRegs(pid, &regs)
+			if err != nil {
+				break
+			}
+			name := ss.GetName(regs.Orig_rax)
+			// fmt.Printf("name: %s, id: %d \n", name, regs.Orig_rax)
+			var straceSend structs.StraceSend
+			straceSend.Name = name
+			straceSend.Pid = int(regs.Orig_rax)
+			ss.Inc(regs.Orig_rax)
+		}
+
+		err = syscall.PtraceSyscall(pid, 0)
+		if err != nil {
+			panic(err)
+		}
+
+		_, err = syscall.Wait4(pid, nil, 0, nil)
+		if err != nil {
+			panic(err)
+		}
+
+		exit = !exit
+		listStrace := ss.Print()
+		data := listStrace
+		if err := connection.WriteJSON(data); err != nil {
+			log.Println(err)
+			return
+		}
+	}
+}
+
 func socketMemory(response http.ResponseWriter, request *http.Request) {
 	upgrader.CheckOrigin = func(request *http.Request) bool { return true }
 	ws, err := upgrader.Upgrade(response, request, nil)
@@ -134,6 +251,17 @@ func socketCpu(response http.ResponseWriter, request *http.Request) {
 	log.Println("Client conected to CPU")
 	writerCpu(ws)
 	log.Println("Client disconected to CPU")
+}
+
+func socketStrace(response http.ResponseWriter, request *http.Request) {
+	upgrader.CheckOrigin = func(request *http.Request) bool { return true }
+	ws, err := upgrader.Upgrade(response, request, nil)
+	if err != nil {
+		log.Println(err)
+	}
+	log.Println("Client connected to Strace")
+	writerStrace(ws)
+	log.Println("Client disconnected to Strace")
 }
 
 func getCpuUsage() float64 {
