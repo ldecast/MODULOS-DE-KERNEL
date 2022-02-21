@@ -29,3 +29,24 @@ hr {
     margin: 20px auto 20px auto;
     margin-bottom: 40px;
 }
+
+.histogram-container {
+    display: flex;
+    margin: 50px;
+}
+
+.names-histogram {
+    background-color: #373a3c;
+    color: white;
+    border-radius: 10px;
+    padding: 10px;
+    height: fit-content;
+    margin-left: auto;
+}
+
+.strace-histogram {
+    width: 70%;
+    margin: auto;
+    border-radius: 10px;
+    border: 8px solid;
+}

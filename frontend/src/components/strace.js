@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom'
 import { PidStrace } from '../history/history'
 import './css/strace.css';
+import Histograma from './histograma';
 
 function Strace() {
 
@@ -65,7 +66,22 @@ function Strace() {
                     </tbody>
                 </table>
             </div>
-            <h5>Histograma:</h5>
+            <div className='histogram-container'>
+                <div className='names-histogram'>
+                    {
+                        response.List.map((rp, i) => {
+                            return (
+                                <p>{i + 1}) {rp.Name}</p>
+                            )
+                        })
+                    }
+                </div>
+                <div className="strace-histogram">
+                    <Histograma
+                        list={response.List}
+                    />
+                </div>
+            </div>
         </div>
     );
 }
