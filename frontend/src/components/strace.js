@@ -79,6 +79,7 @@ function Strace() {
                 <div className="strace-histogram">
                     <Histograma
                         list={response.List}
+                        key={Math.random()}
                     />
                 </div>
             </div>

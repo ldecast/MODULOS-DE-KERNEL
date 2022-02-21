@@ -1,5 +1,6 @@
 import React from 'react'
 import { Chart } from 'react-google-charts'
+import history from '../history/history'
 
 export const clientcpu = new WebSocket('ws://localhost:4200/cpu')
 export class Cpu extends React.Component {
@@ -153,4 +154,5 @@ export class Cpu extends React.Component {
             }
         })
     }
+
 }

@@ -19,7 +19,7 @@ function App() {
           <Route exact path="/cpu" element={<Cpu />} />
           <Route exact path="/memory" element={<Memory />} />
           <Route exact path="/tree" element={<Arbol />} />
-          <Route path="/strace/:pid" element={<Strace />} />
+          <Route exact path="/strace/:pid" element={<Strace />} />
         </Routes>
       </Router>
     </div>
