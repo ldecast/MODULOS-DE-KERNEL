@@ -79,49 +79,49 @@ export class Cpu extends React.Component {
                     </p>
                 </div>
                 <h1>Procesos</h1>
-            <br />
-            <div className='row'>
-                <div className="col">Running: {this.state.cpuData.Running}</div>
-                <div className="col">Sleeping: {this.state.cpuData.Sleeping}</div>
-                <div className="col">Zombie: {this.state.cpuData.Zombie}</div>
-                <div className="col">Stopped: {this.state.cpuData.Stopped}</div>
-                <div className="col">Total: {this.state.cpuData.Total}</div>
-                <div className="col">Usage: {this.getUsage()}</div>
-            </div>
-            <br />
-            <table className="table table-striped table-hover table-light">
-                <thead>
-                    <tr>
-                        <th scope='col'>PID</th>
-                        <th scope='col'>Name</th>
-                        <th scope='col'>User</th>
-                        <th scope='col'>State</th>
-                        <th scope='col'>RAM</th>
-                        <th scope='col'>Kill</th>
-                        <th scope='col'>Strace</th>
-                    </tr>
-                </thead>
-                <tbody style={{ textAlign: 'center' }}>
-                    {this.state.cpuData.Processes.map(
-                        element =>
-                            <tr key={element.Pid}>
-                                <td>{element.Pid}</td>
-                                <td>{element.Name}</td>
-                                <td>{element.User}</td>
-                                <td>{element.State}</td>
-                                <td>{element.Ram}</td>
-                                <td><button className='btn btn-danger' onClick={()=>this.killProcess(element.Pid)}>KILL</button></td>
-                                <td><button className='btn btn-danger'>Strace</button></td>
-                            </tr>
-                    )}
-                </tbody>
-            </table>
+                <br />
+                <div className='row'>
+                    <div className="col">Running: {this.state.cpuData.Running}</div>
+                    <div className="col">Sleeping: {this.state.cpuData.Sleeping}</div>
+                    <div className="col">Zombie: {this.state.cpuData.Zombie}</div>
+                    <div className="col">Stopped: {this.state.cpuData.Stopped}</div>
+                    <div className="col">Total: {this.state.cpuData.Total}</div>
+                    <div className="col">Usage: {this.getUsage()}</div>
+                </div>
+                <br />
+                <table className="table table-striped table-hover table-light">
+                    <thead>
+                        <tr>
+                            <th scope='col'>PID</th>
+                            <th scope='col'>Name</th>
+                            <th scope='col'>User</th>
+                            <th scope='col'>State</th>
+                            <th scope='col'>RAM</th>
+                            <th scope='col'>Kill</th>
+                            <th scope='col'>Strace</th>
+                        </tr>
+                    </thead>
+                    <tbody style={{ textAlign: 'center' }}>
+                        {this.state.cpuData.Processes.map(
+                            element =>
+                                <tr key={element.Pid}>
+                                    <td>{element.Pid}</td>
+                                    <td>{element.Name}</td>
+                                    <td>{element.User}</td>
+                                    <td>{element.State}</td>
+                                    <td>{element.Ram}</td>
+                                    <td><button className='btn btn-danger' onClick={() => this.killProcess(element.Pid)}>KILL</button></td>
+                                    <td><button className='btn btn-danger' onClick={() => window.open("strace/" + element.Pid)}>Strace</button></td>
+                                </tr>
+                        )}
+                    </tbody>
+                </table>
             </div>
         )
     }
 
-    getUsage(){
-        return Math.round(this.state.cpuData.Usage*100)/100
+    getUsage() {
+        return Math.round(this.state.cpuData.Usage * 100) / 100
     }
 
     fillData() {
@@ -139,18 +139,18 @@ export class Cpu extends React.Component {
         this.setState({ data: datos })
     }
 
-    killProcess(pid){
-     fetch("http://localhost:4200/kill",{
-         method:'POST',
-         headers: { 'Content-Type': 'application/json' },
-         body: pid
-     }).then(async response =>{
-         const json =await response.json()
-        if (json.value != false){
-            // tengo que poner el verdadero
-        }else{
-            // tengo que poner el falso
-        }
-     })   
+    killProcess(pid) {
+        fetch("http://localhost:4200/kill", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: pid
+        }).then(async response => {
+            const json = await response.json()
+            if (json.value != false) {
+                // tengo que poner el verdadero
+            } else {
+                // tengo que poner el falso
+            }
+        })
     }
 }

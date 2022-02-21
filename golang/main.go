@@ -24,65 +24,65 @@ var upgrader = websocket.Upgrader{
 	WriteBufferSize: 1024,
 }
 
-// func main() {
-// 	makeServer()
-// }
-
 func main() {
-	var err error
-	var wstat syscall.WaitStatus
-	var regs syscall.PtraceRegs
-	var ss structs.SyscallCounter
-	ss = ss.Init()
-
-	var pid = 7335
-	exit := true
-
-	erx := syscall.PtraceAttach(pid)
-	if err != nil {
-		fmt.Print("Attach")
-		fmt.Print(erx)
-	}
-
-	_, err = syscall.Wait4(pid, &wstat, 0, nil)
-	if err != nil {
-		fmt.Printf("wait %d err %s\n", pid, err)
-		fmt.Println(err)
-	}
-
-	err = syscall.PtraceSetOptions(pid, syscall.PTRACE_O_TRACESYSGOOD)
-	if err != nil {
-		fmt.Println("Ptrace set options")
-		panic(err)
-	}
-
-	for {
-		if exit {
-			err = syscall.PtraceGetRegs(pid, &regs)
-			if err != nil {
-				break
-			}
-			name := ss.GetName(regs.Orig_rax)
-			fmt.Printf("name: %s, id: %d \n", name, regs.Orig_rax)
-			ss.Inc(regs.Orig_rax)
-		}
-
-		err = syscall.PtraceSyscall(pid, 0)
-		if err != nil {
-			panic(err)
-		}
-
-		_, err = syscall.Wait4(pid, nil, 0, nil)
-		if err != nil {
-			panic(err)
-		}
-
-		exit = !exit
-		ss.Print()
-		fmt.Println("---------------------------------------------")
-	}
-
+	makeServer()
 }
+
+// func main() {
+// 	var err error
+// 	var wstat syscall.WaitStatus
+// 	var regs syscall.PtraceRegs
+// 	var ss structs.SyscallCounter
+// 	ss = ss.Init()
+
+// 	var pid = 100029
+// 	exit := true
+
+// 	erx := syscall.PtraceAttach(pid)
+// 	if err != nil {
+// 		fmt.Print("Attach")
+// 		fmt.Print(erx)
+// 	}
+
+// 	_, err = syscall.Wait4(pid, &wstat, 0, nil)
+// 	if err != nil {
+// 		fmt.Printf("wait %d err %s\n", pid, err)
+// 		fmt.Println(err)
+// 	}
+
+// 	err = syscall.PtraceSetOptions(pid, syscall.PTRACE_O_TRACESYSGOOD)
+// 	if err != nil {
+// 		fmt.Println("Ptrace set options")
+// 		panic(err)
+// 	}
+
+// 	for {
+// 		if exit {
+// 			err = syscall.PtraceGetRegs(pid, &regs)
+// 			if err != nil {
+// 				break
+// 			}
+// 			name := ss.GetName(regs.Orig_rax)
+// 			fmt.Printf("name: %s, id: %d \n", name, regs.Orig_rax)
+// 			ss.Inc(regs.Orig_rax)
+// 		}
+
+// 		err = syscall.PtraceSyscall(pid, 0)
+// 		if err != nil {
+// 			panic(err)
+// 		}
+
+// 		_, err = syscall.Wait4(pid, nil, 0, nil)
+// 		if err != nil {
+// 			panic(err)
+// 		}
+
+// 		exit = !exit
+// 		ss.Print()
+// 		fmt.Println("---------------------------------------------")
+// 	}
+
+// }
 
 func makeServer() {
 	router := mux.NewRouter().StrictSlash(true)
@@ -154,7 +154,7 @@ func writerRam(connection *websocket.Conn) {
 			log.Println(err)
 			return
 		}
-		time.Sleep(1000 * time.Millisecond)
+		time.Sleep(3000 * time.Millisecond)
 	}
 }
 
@@ -165,7 +165,7 @@ func writerCpu(connection *websocket.Conn) {
 			log.Println(err)
 			return
 		}
-		time.Sleep(1000 * time.Millisecond)
+		time.Sleep(3000 * time.Millisecond)
 	}
 }
 
@@ -197,6 +197,12 @@ func writerStrace(connection *websocket.Conn, pid int) {
 	}
 
 	for {
+		if err != nil {
+			dataErr := structs.StraceSend{}
+			connection.WriteJSON(dataErr)
+			break
+		}
+		var straceSend structs.StraceSend
 		if exit {
 			err = syscall.PtraceGetRegs(pid, &regs)
 			if err != nil {
@@ -204,7 +210,6 @@ func writerStrace(connection *websocket.Conn, pid int) {
 			}
 			name := ss.GetName(regs.Orig_rax)
 			// fmt.Printf("name: %s, id: %d \n", name, regs.Orig_rax)
-			var straceSend structs.StraceSend
 			straceSend.Name = name
 			straceSend.Pid = int(regs.Orig_rax)
 			ss.Inc(regs.Orig_rax)
@@ -222,11 +227,13 @@ func writerStrace(connection *websocket.Conn, pid int) {
 
 		exit = !exit
 		listStrace := ss.Print()
-		data := listStrace
-		if err := connection.WriteJSON(data); err != nil {
-			log.Println(err)
+		straceSend.List = listStrace
+		data := straceSend
+		if err1 := connection.WriteJSON(data); err1 != nil {
+			log.Println(err1)
 			return
 		}
+		// time.Sleep(30 * time.Millisecond)
 	}
 }
 

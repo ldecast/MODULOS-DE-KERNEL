@@ -1,0 +1,31 @@
+h2 {
+    padding-top: 30px;
+    padding-bottom: 20px;
+}
+
+hr {
+    border: 2px solid;
+}
+
+.header-strace {
+    margin-top: 30px !important;
+    margin-bottom: 20px !important;
+    display: flex;
+    background-color: lightblue;
+    width: 50%;
+    margin: auto;
+}
+
+.header-strace>p {
+    margin: auto;
+    font-size: large;
+    font-weight: bold;
+}
+
+.table-strace {
+    /* margin: 0px 50px 0px 50px; */
+    position: relative;
+    width: 50%;
+    margin: 20px auto 20px auto;
+    margin-bottom: 40px;
+}

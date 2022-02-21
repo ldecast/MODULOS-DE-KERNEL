@@ -1,11 +1,10 @@
-import logo from './logo.svg';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Welcome } from './components/welcome';
 import { Cpu } from './components/cpu';
 import { Memory } from './components/memory';
 import { Navbar } from './components/navbar';
 import { Arbol } from './components/arbol';
-import {Strace } from './components/strace';
+import Strace from './components/strace';
 import history from './history/history';
 import './App.css';
 
@@ -19,8 +18,8 @@ function App() {
           <Route exact path="/" element={<Welcome />} />
           <Route exact path="/cpu" element={<Cpu />} />
           <Route exact path="/memory" element={<Memory />} />
-          <Route exact path="/tree" element ={<Arbol/>}/>
-          <Route exact path="/strace" element ={<Strace/>}/>
+          <Route exact path="/tree" element={<Arbol />} />
+          <Route path="/strace/:pid" element={<Strace />} />
         </Routes>
       </Router>
     </div>

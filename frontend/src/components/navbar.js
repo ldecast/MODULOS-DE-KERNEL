@@ -5,32 +5,32 @@ export class Navbar extends React.Component {
     render() {
         return (
             <div>
-                <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-                    <div class='container'>
-                        <a class="navbar-brand" href='/'>Proyecto 1</a>
-                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
+                <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+                    <div className='container'>
+                        <a className="navbar-brand" href='/'>Práctica 1</a>
+                        <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                            <span className="navbar-toggler-icon"></span>
                         </button>
-                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                            <ul class="navbar-nav mr-auto">
-                                <li class="nav-item active">
+                        <div className="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul className="navbar-nav mr-auto">
+                                <li className="nav-item active">
                                     <Link to='/'>
-                                        <a class="nav-link">Datos</a>
+                                        <a className="nav-link">Datos</a>
                                     </Link>
                                 </li>
-                                <li class="nav-item active">
+                                <li className="nav-item active">
                                     <Link to='/cpu'>
-                                        <a class="nav-link" >CPU</a>
+                                        <a className="nav-link" >CPU</a>
                                     </Link>
                                 </li>
-                                <li class="nav-item active">
+                                <li className="nav-item active">
                                     <Link to='/memory'>
-                                        <a class="nav-link" >Memoria</a>
+                                        <a className="nav-link" >Memoria</a>
                                     </Link>
                                 </li>
-                                <li class="nav-item active">
+                                <li className="nav-item active">
                                     <Link to='/tree'>
-                                        <a class="nav-link" >Arbol</a>
+                                        <a className="nav-link" >Arbol</a>
                                     </Link>
                                 </li>
                             </ul>
